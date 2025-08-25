@@ -52,11 +52,22 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
     let book = books[isbn];
     if (book) {
-        books[isbn]["reviews"][username] = review;
+        book.reviews[username] = review;
         res.send(`Review ${review} from ${username} has been added`);
     } else {
         res.send("Unable to add review!");
     }
+});
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    let isbn = parseInt(req.params.isbn);
+    const username = req.body.username;
+    let review = books[isbn]["reviews"][username]
+
+    if (review) {
+        delete books[isbn]["reviews"][username];
+    }
+    res.send(`Review with the user ${username} is deleted`);
 });
 
 module.exports.authenticated = regd_users;
